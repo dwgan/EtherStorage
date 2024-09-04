@@ -378,6 +378,9 @@
           <state>$PROJ_DIR$/../Middlewares/Third_Party/LwIP/src/include/compat/stdc</state>
           <state>$PROJ_DIR$/../Middlewares/Third_Party/LwIP/system/arch</state>
           <state>$PROJ_DIR$/../Drivers/BSP/Components/lan8742</state>
+          <state>$PROJ_DIR$/../FATFS/Target</state>
+          <state>$PROJ_DIR$/../FATFS/App</state>
+          <state>$PROJ_DIR$/../Middlewares/Third_Party/FatFs/src</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -1140,6 +1143,9 @@
           <name>$PROJ_DIR$\..\Core\Src\freertos.c</name>
         </file>
         <file>
+          <name>$PROJ_DIR$/../Core/Src/sdio.c</name>
+        </file>
+        <file>
           <name>$PROJ_DIR$\..\Core\Src\usart.c</name>
         </file>
         <file>
@@ -1164,6 +1170,24 @@
           <name>Target</name>
           <file>
             <name>$PROJ_DIR$\..\LWIP\Target\ethernetif.c</name>
+          </file>
+        </group>
+      </group>
+      <group>
+        <name>FATFS</name>
+        <group>
+          <name>Target</name>
+          <file>
+            <name>$PROJ_DIR$/../FATFS/Target/bsp_driver_sd.c</name>
+          </file>
+          <file>
+            <name>$PROJ_DIR$/../FATFS/Target/sd_diskio.c</name>
+          </file>
+        </group>
+        <group>
+          <name>App</name>
+          <file>
+            <name>$PROJ_DIR$/../FATFS/App/fatfs.c</name>
           </file>
         </group>
       </group>
@@ -1229,6 +1253,12 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_eth.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c</name>
@@ -1523,6 +1553,21 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\Middlewares\Third_Party\LwIP\src\apps\mqtt\mqtt.c</name>
+      </file>
+    </group>
+    <group>
+      <name>FatFs</name>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/Third_Party/FatFs/src/diskio.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/Third_Party/FatFs/src/ff.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/Third_Party/FatFs/src/ff_gen_drv.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$/../Middlewares/Third_Party/FatFs/src/option/syscall.c</name>
       </file>
     </group>
   </group>

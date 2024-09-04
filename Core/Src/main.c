@@ -20,7 +20,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "fatfs.h"
 #include "lwip.h"
+#include "sdio.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -66,42 +68,6 @@ int fputc(int ch, FILE *f) {
     return ch;
 }
 
-//void PrintTask(void *param) {
-//    while (1) {
-//        HAL_UART_Transmit(&huart1, (uint8_t *)"RTOS is running...\r\n", 21, HAL_MAX_DELAY);
-//        vTaskDelay(pdMS_TO_TICKS(1000));
-//    }
-//}
-
-//void controlTask(void * param)
-//{
-//    MX_LWIP_Init();
-//    vTaskDelete( NULL );
-//    
-//}
-//
-//void commandTask(void * param)
-//{
-//    udp_echoserver_init();
-//    while(1)
-//    {
-//        vTaskDelay(2);
-//    }
-//    
-//}
- 
-//TaskHandle_t StartTaskHandle;
-//void StartTask(void *arg)
-//{
-//  taskENTER_CRITICAL();	        
-//  
-//  //    xTaskCreate(controlTask, "controlTask", 200, NULL, 4, NULL);
-//  //    xTaskCreate(commandTask, "commandTask", 200, NULL, 4, NULL);
-//  xTaskCreate(PrintTask, "PrintTask", 512, NULL, 2, NULL);
-//  vTaskDelete(StartTaskHandle);	
-//  taskEXIT_CRITICAL();	    
-//}
-
 /* USER CODE END 0 */
 
 /**
@@ -134,10 +100,13 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+  MX_SDIO_SD_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
   setvbuf(stdout, NULL, _IONBF, 0);
 
   printf("Hello, STM32!\r\n");
+  
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -184,7 +153,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 8;
   RCC_OscInitStruct.PLL.PLLN = 168;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();

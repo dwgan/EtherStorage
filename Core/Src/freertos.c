@@ -32,6 +32,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "usart.h"
+#include "fatfs.h"
 
 /* USER CODE END Includes */
 
@@ -56,6 +57,9 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
+FATFS FatFs;    // 文件系统对象
+FIL fil;        // 文件对象
+FRESULT res;    // 文件操作结果
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 osThreadId ethernetTaskHandle;
@@ -86,6 +90,43 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
   *ppxIdleTaskStackBuffer = &xIdleStack[0];
   *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
   /* place for user code */
+}
+
+void init_sd_card(void) {
+    // 初始化SD卡并挂载文件系统
+    res = f_mount(&FatFs, "", 1);  // 挂载SD卡
+    if (res == FR_OK) {
+        printf("SD Card Mounted Successfully.\n");
+    } else {
+        printf("Failed to Mount SD Card.\n");
+    }
+}
+
+void create_new_file(const char* filename) {
+    // 创建一个新文件
+    res = f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
+    if (res == FR_OK) {
+        printf("File Created Successfully: %s\n", filename);
+    } else {
+        printf("Failed to Create File: %s\n", filename);
+    }
+}
+
+void write_to_file(const char* data, UINT data_len) {
+    // 向文件写入数据
+    UINT bytes_written;
+    res = f_write(&fil, data, data_len, &bytes_written);
+    if (res == FR_OK && bytes_written == data_len) {
+        printf("Data Written to File Successfully.\n");
+    } else {
+        printf("Failed to Write Data to File.\n");
+    }
+}
+
+void close_file(void) {
+    // 关闭文件
+    f_close(&fil);
+    printf("File Closed.\n");
 }
 /* USER CODE END GET_IDLE_TASK_MEMORY */
 
@@ -121,7 +162,7 @@ void MX_FREERTOS_Init(void) {
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of ethernetTask */
-  osThreadDef(ethernetTask, EthernetTask, osPriorityNormal, 0, 256);
+  osThreadDef(ethernetTask, EthernetTask, osPriorityNormal, 0, 2048);
   ethernetTaskHandle = osThreadCreate(osThread(ethernetTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -176,6 +217,11 @@ void EthernetTask(void const * argument)
   int addr_len = sizeof(clientAddr);
   char recvBuffer[128];
   
+  // 初始化SD卡
+  init_sd_card();
+  create_new_file("0:/received_data.dat");  // 在TF卡根目录创建文件
+  printf("sd_init!\r\n");
+
   // 创建套接字
   if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
       // 处理错误
@@ -212,10 +258,17 @@ void EthernetTask(void const * argument)
     while (1) {
         int recvLen = recv(newSock, recvBuffer, sizeof(recvBuffer) - 1, 0);
         if (recvLen > 0) {
-            recvBuffer[recvLen] = '\0';
+            recvBuffer[recvLen] = '\0';  // 确保数据以字符串结束（根据需要调整）
+            
+            // 将接收到的数据通过串口发送
             HAL_UART_Transmit(&huart1, (uint8_t*)recvBuffer, recvLen, HAL_MAX_DELAY);
+            
+            // 将接收到的数据写入TF卡
+            write_to_file(recvBuffer, recvLen);
+
         } else {
             // 处理连接断开
+            close_file();  // 在连接断开时关闭文件
             break;
         }
     }
