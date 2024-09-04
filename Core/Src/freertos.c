@@ -145,17 +145,17 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    char taskListBuffer[512];
-    vTaskList(taskListBuffer);
-    printf("\r\nTask List:\n%s\r\n\n", taskListBuffer);
-    printf("LWIP initialized, IP address: %s\r\n", ip4addr_ntoa(&gnetif.ip_addr));
-    
-    uint32_t phyreg;      
-    if (HAL_ETH_ReadPHYRegister(&heth, LAN8720_PHY_ADDRESS, PHY_BSR, &phyreg) != HAL_OK) {
-      printf("Failed to read PHY register\n");
-    } else {
-      printf("PHY BSR register value: 0x%08X\n", phyreg);
-    }
+//    char taskListBuffer[512];
+//    vTaskList(taskListBuffer);
+//    printf("\r\nTask List:\n%s\r\n\n", taskListBuffer);
+//    printf("LWIP initialized, IP address: %s\r\n", ip4addr_ntoa(&gnetif.ip_addr));
+//    
+//    uint32_t phyreg;      
+//    if (HAL_ETH_ReadPHYRegister(&heth, LAN8720_PHY_ADDRESS, PHY_BSR, &phyreg) != HAL_OK) {
+//      printf("Failed to read PHY register\n");
+//    } else {
+//      printf("PHY BSR register value: 0x%08X\n", phyreg);
+//    }
     osDelay(5000);
   }
   /* USER CODE END StartDefaultTask */
