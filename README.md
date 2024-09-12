@@ -1,5 +1,15 @@
 # EtherStorage
 
+这是一个用于嵌入式设备的数据流存储器，在任务执行过程中将串口或者以太网的数据流存储到该设备的SD存储设备中，在任务结束后可通过串口或者以太网将存储的数据流读取出来。
+
+## 接口外设
+
+UART：460800bps
+
+Ethernet：100Mbps
+
+SDIO：48Mbps
+
 ## 开发环境
 
 [STM32CubeMX](https://www.st.com.cn/zh/development-tools/stm32cubemx.html) (本项目使用6.12.0版本)
